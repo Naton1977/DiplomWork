@@ -108,6 +108,7 @@ public class RestApiController {
             userDailyDietaryRationTransfer.setProductWeight(Double.toString(DoubleRounder.round(ration.getProductWeight(), 2)));
             dailyDietaryRationTransfers.add(userDailyDietaryRationTransfer);
         }
+        System.out.println(dailyDietaryRationTransfers);
         return ResponseEntity.ok(dailyDietaryRationTransfers);
     }
 

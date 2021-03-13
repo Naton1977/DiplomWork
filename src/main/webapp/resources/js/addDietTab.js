@@ -198,6 +198,8 @@ window.addEventListener("load", () => {
                                 xhr1.open('POST', 'http://localhost:8080/api/v1/product/create/newProductToTheDailyDiet', false);
                                 xhr1.setRequestHeader('Content-Type', 'application/json');
                                 xhr1.send(sendJson);
+                                productValue = '';
+                                productSearchArray.length = 0;
                                 createDietPageHead();
                                 createLocalTime();
                                 loadUserDiet();
@@ -270,7 +272,8 @@ window.addEventListener("load", () => {
             tmp += "<td></td>";
             tmp += "<td style='font-weight: bold'>Итого :</td>";
             tmp += "</tr>";
-            if(dailyCalorieContent !== 0){
+            if (dailyCalorieContent !== 0) {
+                let newCalorieContent = Math.floor(dailyCalorieContent * 100) / 100;
                 tmp += "<tr>";
                 tmp += "<td></td>";
                 tmp += "<td></td>";
@@ -278,7 +281,7 @@ window.addEventListener("load", () => {
                 tmp += "<td></td>";
                 tmp += "<td></td>";
                 tmp += "<td></td>";
-                tmp += "<td>" + dailyCalorieContent + "</td>";
+                tmp += "<td>" + newCalorieContent + "</td>";
                 tmp += "</tr>";
             }
 

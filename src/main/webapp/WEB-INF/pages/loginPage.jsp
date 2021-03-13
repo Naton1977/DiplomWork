@@ -15,7 +15,7 @@
 <body>
 <header>
     <c:url value="/resources/image/label.jpg" var="label"/>
-    <img src="${label}" alt="">
+   <img src="${label}" alt="">
     <div>SLIM BODY</div>
     <div>диетический дневник</div>
 </header>

@@ -6,6 +6,8 @@
 
     <security:http auto-config="true" use-expressions="false">
         <security:intercept-url pattern="/diaryPage" access="ROLE_ADMIN, ROLE_USER"/>
+        <security:intercept-url pattern="/bodyParameters" access="ROLE_ADMIN, ROLE_USER"/>
+        <security:intercept-url pattern="/api/v1/product/**" access="ROLE_ADMIN, ROLE_USER"/>
         <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <security:logout invalidate-session="true" delete-cookies="true"
                          logout-success-url="/login?logout=success"/>

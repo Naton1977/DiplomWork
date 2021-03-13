@@ -14,7 +14,7 @@
     <script src="${homejs}"></script>
 
     <c:url value="/resources/css/home.css" var="home"/>
-    <link  href="${home}" rel="stylesheet"/>
+    <link href="${home}" rel="stylesheet"/>
 
     <c:url value="/resources/css/weathewidget.css" var="weatherWidget"/>
     <link rel="stylesheet" href="${weatherWidget}"/>
@@ -45,31 +45,30 @@
         <c:url value="/resources/image/water.jpg" var="water"/>
         <img src="${water}" alt="">
         <p>Значение воды для оганизма человека</p>
-        <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam architecto consequatur
-                dolorem necessitatibus praesentium rerum sapiente voluptas? Ad aliquam doloribus, ducimus excepturi
-                impedit ipsam nemo nisi obcaecati quidem rem totam.</span><span>Alias asperiores cumque distinctio
-                eveniet explicabo facilis inventore laudantium maiores maxime nam, ratione sunt velit veritatis?
-                Amet beatae dignissimos dolor enim eos explicabo in libero pariatur quas quos, soluta ut!</span>
-            <span>Commodi corporis excepturi iure libero magnam, magni maxime nam, nemo neque nisi obcaecati
-                    quia ratione recusandae sint sunt temporibus ullam voluptate.</span></p>
-        <a href="#">читать дальше</a>
+        <p><span>Вода – основной элемент организма человека, жизненно важный для работы органов и терморегуляции.
+            В воде растворяется больше веществ, чем в любом другом растворителе. Для большинства происходящих
+            в наших клетках химических реакций требуется вода. Вода нужна для транспортировки питательных веществ
+            и кислорода ко всем клеткам тела. Она помогает преобразовывать пищу в энергию и усваивать питательные
+            вещества. Вода поддерживает стабильность температуры тела и защищает жизненно важные органы, участвует
+            в поддержании формы клеток и органов и важна для здоровья кожи.</span></p>
+        <c:url value="/article/1" var="one"/>
+        <a href="${one}">читать дальше</a>
     </div>
     <div id="item4">
         <c:url value="/resources/image/proteins.jpg" var="proteins"/>
         <img src="${proteins}" alt="">
         <p>Что такое белки и зачем они нужны</p>
-        <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolores eveniet fugiat quia
-                quis! At consectetur corporis earum facere illo illum molestiae optio pariatur quisquam, reiciendis
-                rem suscipit veritatis vitae!</span><span>Animi aperiam corporis cumque cupiditate ea enim error
-                exercitationem fugiat, ipsam laudantium minima minus natus nihil odit officia provident quisquam
-                ratione repellat repudiandae saepe tenetur vel voluptate voluptatibus! Esse, quam?</span>
-            <span>Alias assumenda commodi ea impedit labore placeat possimus quas, recusandae rem repudiandae.
-                    Accusantium aliquam, cumque dignissimos dolorem, ea id iste iure maiores necessitatibus obcaecati
-                    officia quae quasi quia, sint voluptatem?</span><span>Accusantium culpa eveniet, expedita illo
-                    impedit, iure molestiae nisi placeat quaerat repellendus tempora tempore unde? In ipsa laborum
-                    magni maiores sint, temporibus?Animi aperiam corporis cumque</span></p>
-
-        <p><a href="#">читать дальше</a></p>
+        <p><span>Белок – это самый важный материал для процессов восстановления и замены устаревших клеток на новые.
+            Эти процессы происходят в человеческом организме постоянно. Выработка этого вещества в нашем организме
+            невозможна без аминокислот, которыми богат растительный и животный белок. Выполняя строительные функции
+            клеток и органов, белок, на основе которого создаются различные соединения и гормоны, наряду с глюкозой
+            является превосходной пищей для мозга. Волосы, ногти, мышцы, внутренние органы – весь наш организм работает
+            на этом материале.</span><br><span>Основные источники белка – это животные и растительные продукты,
+            например, такие как творог, рыба, мясо и яйца. В процессе пищеварения и переработки организмом изначальный
+            его состав будет отличаться от</span>
+        </p>
+        <c:url value="/article/2" var="two"/>
+        <p><a href="${two}">читать дальше</a></p>
     </div>
     <div id="item5">
         <c:url value="/resources/image/fats.jpg" var="fats"/>

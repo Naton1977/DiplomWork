@@ -365,12 +365,7 @@ window.addEventListener("load", () => {
                 let calorieContent = nodeInput[4].value;
                 let send = true;
                 let product = new Array();
-                product.push(productName);
-                product.push(proteins);
-                product.push(fats);
-                product.push(carbohydrates);
-                product.push(calorieContent);
-                productArray.push(product);
+
 
                 if (productName === "") {
                     document.getElementById("message").innerText = "Значение в поле наименование продукта не должно быть пустым !!!"
@@ -418,6 +413,14 @@ window.addEventListener("load", () => {
                 if (isNaN(numCalorieContentProduct)) {
                     document.getElementById("message").innerText = "Значение в поле каллорийность должно быть числовым !!!"
                     send = false;
+                }
+                if(send === true){
+                    product.push(productName);
+                    product.push(proteins);
+                    product.push(fats);
+                    product.push(carbohydrates);
+                    product.push(calorieContent);
+                    productArray.push(product);
                 }
 
                 if (send === true) {
