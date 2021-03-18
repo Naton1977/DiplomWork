@@ -1,12 +1,31 @@
 package org.example.domain.dto;
 
 
+import org.example.validator.Login;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserDto {
 
     private int userId;
+
+    @Length(min = 5, message = "{user.login.min.length}")
+    @Login(message = "{user.login}")
+    @NotEmpty(message = "{user.login.notEmpty}")
     private String userLogin;
+
+
+    @Length(min = 5, message = "{user.password.min.length}")
+    @NotEmpty(message = "{user.passwordNotEmpty}")
     private String userPassword;
+
+
+    @Email(message = "{user.email.bad.format}")
+    @NotEmpty(message = "{user.email.notEmpty}")
     private String userEmail;
+
+    @NotEmpty(message = "{user.confirmPasswordNotEmpty}")
     private String confirmPassword;
 
     public String getConfirmPassword() {

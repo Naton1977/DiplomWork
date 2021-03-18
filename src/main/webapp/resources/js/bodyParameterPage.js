@@ -170,12 +170,19 @@ window.addEventListener("load", () => {
             cont.style.textAlign = "center";
             let divResult = document.getElementById("resultDC");
             divResult.style.fontSize = 1.5 + "vw";
-            divResult.innerText = "Ваша дневная каллорийность : " + " " + brm + "  " + " Ккал";
+            divResult.innerText = "Ваша дневная каллорийность : " + " " + brm + " " + "Ккал";
             let DCResult = document.getElementById("DCResult");
-            DCResult.innerText = '  ' + brm + '  ' + 'ккал';
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', 'localhost:8080/');
-            xhr.send();
+            DCResult.innerText = '  ' + brm;
+            const calorieContent = {
+                calorieContent: brm
+            };
+
+
+            let sendJson = JSON.stringify(calorieContent);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:8080/api/v1/product/calorieContent', false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(sendJson);
         }
     }
     window.addEventListener("click", pushCalculateButton);

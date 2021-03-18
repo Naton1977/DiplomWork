@@ -36,7 +36,7 @@ header div:nth-of-type(2) {
 #item1a {
     background-color: rgb(245, 243, 229);
     text-align: center;
-    width: 80px;
+    width: 7.5%;
     cursor: pointer;
     border-width: 1px 1px 0 1px;
     border-color: black;
@@ -46,7 +46,7 @@ header div:nth-of-type(2) {
 
 #item1b {
     text-align: center;
-    width: 100px;
+    width: 9%;
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px 5px 0 0;
@@ -55,7 +55,7 @@ header div:nth-of-type(2) {
 
 #item1c {
     text-align: center;
-    width: 100px;
+    width: 9%;
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px 5px 0 0;
@@ -64,7 +64,7 @@ header div:nth-of-type(2) {
 
 #item1d {
     text-align: center;
-    width: 180px;
+    width: 16%;
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px 5px 0 0;
@@ -73,7 +73,7 @@ header div:nth-of-type(2) {
 
 #item1e {
     text-align: center;
-    width: 220px;
+    width: 19%;
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px 5px 0 0;
@@ -82,7 +82,7 @@ header div:nth-of-type(2) {
 
 #item1f {
     text-align: center;
-    width: 100px;
+    width: 8%;
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px 5px 0 0;
@@ -99,13 +99,13 @@ header div:nth-of-type(2) {
     border-width: 0 1px 1px 1px;
     border-color: black;
     border-style: solid;
-    width: 72%;
+    width: 70%;
     min-height: 100vh;
 }
 
 #column2 {
     border: 1px solid black;
-    width: 28%;
+    width: 30%;
     min-height: 100vh;
 }
 
@@ -214,4 +214,5 @@ header div:nth-of-type(2) {
 #logout{
     text-decoration: none;
     font-size: 18px;
+    color: darkorchid;
 }

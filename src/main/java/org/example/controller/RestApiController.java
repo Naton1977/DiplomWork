@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -110,6 +112,14 @@ public class RestApiController {
         }
         System.out.println(dailyDietaryRationTransfers);
         return ResponseEntity.ok(dailyDietaryRationTransfers);
+    }
+
+    @PostMapping(value = "/calorieContent", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void saveUserDailyCalorieContent(@Validated @RequestBody DailyDietaryRation dailyDietaryRation, BindingResult bindingResult){
+       if(!bindingResult.hasErrors()){
+           UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+           productService.addCalorieContentFromUser(principal, dailyDietaryRation.getCalorieContent());
+       }
     }
 
 }

@@ -25,6 +25,9 @@ public class DiaryUser {
     @Column(name = "user_role")
     private String role;
 
+    @Column(name = "user_dayly_calorie_content", columnDefinition = "Float(10,2) default 0.0")
+    private double calorieContent;
+
     @ManyToMany
     @JoinTable(name = "user_product",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,6 +40,13 @@ public class DiaryUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recording_id"))
     private Set<DailyDietaryRation> dailyDietaryRations = new HashSet<>();
+
+
+    @ManyToMany
+    @JoinTable(name = "user_body_parameters",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "body_parameter_id"))
+    private Set<BodyParameters> bodyParametersSet = new HashSet<>();
 
 
     public DiaryUser() {
@@ -91,14 +101,6 @@ public class DiaryUser {
         this.productSet = productSet;
     }
 
-    public void addProductSet(Product product) {
-        productSet.add(product);
-    }
-
-    public void addDailyDietaryRations(DailyDietaryRation dailyDietaryRation) {
-        dailyDietaryRations.add(dailyDietaryRation);
-    }
-
     public Set<DailyDietaryRation> getDailyDietaryRations() {
         return dailyDietaryRations;
     }
@@ -107,14 +109,43 @@ public class DiaryUser {
         this.dailyDietaryRations = dailyDietaryRations;
     }
 
+    public Set<BodyParameters> getBodyParametersSet() {
+        return bodyParametersSet;
+    }
+
+    public void setBodyParametersSet(Set<BodyParameters> bodyParametersSet) {
+        this.bodyParametersSet = bodyParametersSet;
+    }
+
+    public double getCalorieContent() {
+        return calorieContent;
+    }
+
+    public void setCalorieContent(double calorieContent) {
+        this.calorieContent = calorieContent;
+    }
+
+    public void addProductSet(Product product) {
+        productSet.add(product);
+    }
+
+    public void addDailyDietaryRations(DailyDietaryRation dailyDietaryRation) {
+        dailyDietaryRations.add(dailyDietaryRation);
+    }
+
+    public void addBodyParameters(BodyParameters bodyParameters) {
+        bodyParametersSet.add(bodyParameters);
+    }
+
     @Override
     public String toString() {
-        return "User{" +
+        return "DiaryUser{" +
                 "userId=" + userId +
                 ", userLogin='" + userLogin + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", role='" + role + '\'' +
+                ", calorieContent=" + calorieContent +
                 '}';
     }
 }

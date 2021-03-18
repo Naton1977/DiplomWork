@@ -53,7 +53,7 @@
             <sec:authentication property="name" var="username"/>
             <div id="userLogin">Вы вошли как :&nbsp;<span id="login">${username}</span></div>
             <div id="containerLogout">Для выхода нажмете : <a id="logout" href="<spring:url value="/logout"/>">выход</a></div>
-            <div id="userCalorieContent">Ваша дневная калорийность :<span id="DCResult"></span></div>
+            <div id="userCalorieContent">Ваша дневная калорийность :<span id="DCResult">&nbsp;${calorieContent}</span>&nbsp; Ккал</div>
             <div style="margin-left: 5px"><em>(Для отображения заполните форму)</em></div>
             <div id="calendar_table"></div>
             <form id="form-submit-product" method="post" action="<spring:url value="/api/v1/product/create"/>">

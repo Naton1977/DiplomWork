@@ -74,30 +74,31 @@
         <c:url value="/resources/image/fats.jpg" var="fats"/>
         <img src="${fats}" alt="">
         <p>Нужны ли жиры организму человека ?</p>
-        <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A cumque cupiditate deserunt dolore error
-            excepturi exercitationem facere illo, impedit laboriosam modi odio omnis reprehenderit sint soluta
-            temporibus voluptas! Ab, iure.</span><span>Accusamus adipisci aliquam doloremque eveniet excepturi
-            fuga incidunt inventore itaque laborum maiores, numquam odio repellat rerum sint sit tempora unde
-            voluptas voluptatem. Inventore iure nemo, reiciendis temporibus vel veniam voluptates?</span><span>
-            Accusantium aliquid atque consectetur consequatur dicta dolor dolore dolorem eaque eius ex expedita
-            harum hic impedit in libero, minima, minus nam necessitatibus odio quae quibusdam quod reiciendis saepe
-            veniam vitae.Ad architecto atque deserunt itaque quos, voluptatum.</span></p>
-        <p><a href="#">читать дальше</a></p>
+        <p>Кто занимается спортом, знает, как много нужно приложить усилий для избавления от лишних
+            килограммов и жира. Сжигание жира это длительный и довольно сложный процесс. Однако, жир
+            необходим для множества процессов, происходящих в нашем организме. Без жиров существование
+            человека невозможно. Они также необходимы для нормального функционирования головного мозга.
+            Но не все жиры полезны.<br>
+            Жир дает огромный приток энергии, достичь которого практически невозможно, потребляя только белки
+            и углеводы. Каждый грамм жира снабжает 9 калориями. Для сравнения, белки и углеводы дадут только
+            4 калории на каждый грамм веса.</p>
+        <c:url value="/article/3" var="three"/>
+        <p><a href="${three}">читать дальше</a></p>
     </div>
     <div id="item6">
         <c:url value="/resources/image/carbohydrates.jpg" var="carbogydrates"/>
         <img src="${carbogydrates}" alt="">
         <p>Углеводы источник энергии или ..... ?</p>
-        <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, ad atque dolores eius eligendi hic
-            itaque iure labore magnam nemo non quaerat quos recusandae, repellendus reprehenderit repudiandae tempora
-            voluptates? Ab!</span><span>Culpa dicta exercitationem, expedita illum, ipsa ipsum maiores molestiae natus
-            numquam officiis repellendus vel voluptas? Aspernatur dolore doloribus exercitationem fuga ipsa nisi quaerat.
-            Aut dicta fuga nisi nostrum officiis voluptates.</span><span>Inventore molestias quaerat temporibus.
-            Assumenda cumque earum, facilis ipsum laboriosam mollitia non ullam? Animi beatae dolor eius ex facilis
-            modi odio tenetur vero! Ad architecto atque deserunt itaque quos, voluptatum.</span><span>Delectus dolores
-            eligendi enim obcaecati quia! Ab ad asperiores ducimus exercitationem fugiat fugit laborum odit quibusdam
-            vel veritatis? Accusantium consequatur corporis culpa eaque error </span></p>
-        <p><a href="#">читать дальше</a></p>
+        <p>Понятия «углевод» и “сахар” – не одно и то же. Сахар – это условное обиходное понятие, используемое в основном
+            в отношении сахарозы (т.н. столовый сахар), а также других водорастворимых простых углеводов со сладким
+            вкусом (моно- и дисахариды, такие как глюкоза, фруктоза, лактоза, мальтоза). Наш организм, а в особенности
+            мозг, нуждается в постоянном снабжении глюкозой, обеспечивающей эффективность и результативность его работы.
+            При длительном недостатке углеводов организм начинает синтезировать глюкозу из собственных белков, из-за
+            чего заметно снижается его защитная способность в отношении факторов внешней среды. Глюкоза – основное
+            «топливо» для большинства клеток тела. Она откладывается в печени и мышцах в виде гликогена. Гликоген
+            печени используется</p>
+        <c:url value="/article/4" var="four"/>
+        <p><a href="${four}">читать дальше</a></p>
     </div>
     <div id="item7"></div>
     <div id="item8"></div>

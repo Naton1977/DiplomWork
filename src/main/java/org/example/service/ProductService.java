@@ -2,9 +2,11 @@ package org.example.service;
 
 
 import org.example.domain.dto.NewProductTheDailyDiet;
+import org.example.domain.entity.BodyParameters;
 import org.example.domain.entity.DailyDietaryRation;
 import org.example.domain.entity.DiaryUser;
 import org.example.domain.entity.Product;
+import org.example.repository.BodyParametersRepository;
 import org.example.repository.DailyDietaryRationRepository;
 import org.example.repository.ProductRepository;
 import org.example.repository.UserRepository;
@@ -24,11 +26,13 @@ public class ProductService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final DailyDietaryRationRepository dietaryRationRepository;
+    private final BodyParametersRepository bodyParametersRepository;
 
-    public ProductService(UserRepository userRepository, ProductRepository productRepository, DailyDietaryRationRepository dietaryRationRepository) {
+    public ProductService(UserRepository userRepository, ProductRepository productRepository, DailyDietaryRationRepository dietaryRationRepository, BodyParametersRepository bodyParametersRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.dietaryRationRepository = dietaryRationRepository;
+        this.bodyParametersRepository = bodyParametersRepository;
     }
 
     @Transactional
@@ -169,6 +173,20 @@ public class ProductService {
         DiaryUser diaryUser = userRepository.userByLogin(principal.getUsername());
         Set<DailyDietaryRation> dailyDietaryRationSet = diaryUser.getDailyDietaryRations();
         return dailyDietaryRationSet.stream().sorted(Comparator.comparing(DailyDietaryRation::getDateAdded)).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void saveBodyParameters(BodyParameters bodyParameters, UserDetails principal) {
+        DiaryUser diaryUser = userRepository.userByLogin(principal.getUsername());
+        bodyParameters.addDiaryUserSet(diaryUser);
+        bodyParametersRepository.save(bodyParameters);
+    }
+
+    @Transactional
+    public void addCalorieContentFromUser(UserDetails principal, Double calorieContent) {
+        DiaryUser diaryUser = userRepository.userByLogin(principal.getUsername());
+        diaryUser.setCalorieContent(calorieContent);
+        userRepository.saveAndFlush(diaryUser);
     }
 
 

@@ -1,7 +1,11 @@
 package org.example.controller;
 
+import org.example.domain.entity.DiaryUser;
 import org.example.service.ProductService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +34,13 @@ public class HomeController {
 
 
     @GetMapping("/diaryPage")
-    public String goDiaryPage() {
+    public String goDiaryPage(Model model) {
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        DiaryUser diaryUser = productService.findUserByLogin(principal.getUsername());
+        if (diaryUser.getCalorieContent() != 0) {
+            long calorie = Math.round(diaryUser.getCalorieContent());
+            model.addAttribute("calorieContent",calorie);
+        }
         return "diaryPage";
     }
 
@@ -40,11 +50,15 @@ public class HomeController {
         if (id == 1) {
             return "articlePage1";
         }
-        if (id == 2){
+        if (id == 2) {
             return "articlePage2";
         }
-            return "home";
+        if (id == 3) {
+            return "articlePage3";
+        }
+        if (id == 4) {
+            return "articlePage4";
+        }
+        return "home";
     }
-
-
 }

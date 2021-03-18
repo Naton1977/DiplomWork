@@ -4,7 +4,9 @@
 <div style="display: flex; flex-wrap: nowrap;">
     <c:url value="/resources/image/body-params-1.png" var="bodyParameters"/>
     <img src="${bodyParameters}" alt="">
-    <form style="margin-left: 10px; display: flex; flex-wrap: nowrap;" method="post" id="formParameters">
+    <c:url value="/bodyParameters/save" var="save"/>
+    <form style="margin-left: 10px; display: flex; flex-wrap: nowrap;" method="post" id="formParameters"
+          action="${save}">
         <div>
             <label>1 Вес<br><input name="weight"></label>
             <p></p>
@@ -37,7 +39,7 @@
             <p></p>
             <label>13 Обхват предплечья<br><input name="forearmGirth"></label>
             <p></p>
-            <label>13 Обхват запястья<br><input name="wristGirth"></label>
+            <label>14 Обхват запястья<br><input name="wristGirth"></label>
             <p></p>
         </div>
     </form>
