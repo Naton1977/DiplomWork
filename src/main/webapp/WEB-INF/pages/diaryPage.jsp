@@ -63,8 +63,12 @@
     </div>
 </div>
 <form id="form-logout" method="post" action="<spring:url value="/logout"/>">
-<%--    <sec:csrfInput/>--%>
 </form>
+<div id="item9">
+    <div id="item9a">SLIM BODY</div>
+    <div><i class="far fa-copyright" id="copy"></i></div>
+</div>
+<div id="year">2020</div>
 <script>
     $("#logout").click((e) => {
         e.preventDefault();

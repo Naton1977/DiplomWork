@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +64,18 @@ public class ProductService {
                         Product prod = productRepository.getOne(productIdInt);
                         Set<DiaryUser> diaryUserSet = prod.getUserSet();
                         if (columnNumberInt == 1) {
-                            prod.setProductName(newProduct);
-                            productRepository.saveAndFlush(prod);
+                            boolean isPresent = false;
+                            Set<Product> productSet = diaryUser.getProductSet();
+                            for (Product product1 : productSet) {
+                                if (product1.getProductName().equals(newProduct)) {
+                                    isPresent = true;
+                                    break;
+                                }
+                            }
+                            if (!isPresent) {
+                                prod.setProductName(newProduct);
+                                productRepository.saveAndFlush(prod);
+                            }
                         }
                         if (columnNumberInt == 2) {
                             try {
@@ -136,8 +147,13 @@ public class ProductService {
         DiaryUser diaryUser = userRepository.userByLogin(login);
         if (diaryUser != null) {
             Set<Product> productSet = diaryUser.getProductSet();
+            Set<DailyDietaryRation> dailyDietaryRationSet = diaryUser.getDailyDietaryRations();
             for (Product product : productSet) {
                 product.getProductName();
+                break;
+            }
+            for (DailyDietaryRation ration : dailyDietaryRationSet) {
+                ration.getDateAdded();
                 break;
             }
             return diaryUser;
@@ -172,7 +188,9 @@ public class ProductService {
     public List<DailyDietaryRation> createUserProductDailyDiaryRationList(UserDetails principal) {
         DiaryUser diaryUser = userRepository.userByLogin(principal.getUsername());
         Set<DailyDietaryRation> dailyDietaryRationSet = diaryUser.getDailyDietaryRations();
-        return dailyDietaryRationSet.stream().sorted(Comparator.comparing(DailyDietaryRation::getDateAdded)).collect(Collectors.toList());
+        List<DailyDietaryRation> dietaryRationList = dailyDietaryRationSet.stream().sorted(Comparator.comparing(DailyDietaryRation::getDateAdded)).collect(Collectors.toList());
+        Collections.reverse(dietaryRationList);
+        return dietaryRationList;
     }
 
     @Transactional
@@ -188,6 +206,5 @@ public class ProductService {
         diaryUser.setCalorieContent(calorieContent);
         userRepository.saveAndFlush(diaryUser);
     }
-
 
 }

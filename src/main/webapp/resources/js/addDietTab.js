@@ -12,11 +12,19 @@ window.addEventListener("load", () => {
         let products;
         let ration;
         let dailyCalorieContent = 0;
+        let userYear;
+        let userMonth;
+        let userDay;
+        let tableWidth;
+        let userRationDate = [];
+        let calorieCount = 0;
+        let pathCount = 2;
+        let sendRequest = false;
 
         let createDietPageHead = function () {
             document.getElementById("column1").innerHTML = "";
             let containerWidth = document.getElementById("column1").offsetWidth;
-            let tableWidth = (containerWidth / 100) * 98;
+            tableWidth = (containerWidth / 100) * 98;
             widthTd1 = (containerWidth / 100) * 8;
             widthTd2 = (containerWidth / 100) * 46;
             widthTd3 = (containerWidth / 100) * 8;
@@ -26,9 +34,9 @@ window.addEventListener("load", () => {
             widthTd7 = (containerWidth / 100) * 8;
             let tmp = '';
             tmp += '<div id="pageDietHead">Дневник питания</div>';
-            tmp += '<p id="titleToday">За сегодня</p>';
-            tmp += '<table id="pageDietTable" style="width: ' + tableWidth + 'px">';
-            tmp += '<thead id="pageDietThead">';
+            tmp += '<p class="title">За сегодня</p>';
+            tmp += '<table class="pageDietTable" style="width: ' + tableWidth + 'px">';
+            tmp += '<thead class="pageDietThead">';
             tmp += '<tr>';
             tmp += '<td style="width: ' + widthTd1 + 'px">Время</td>';
             tmp += '<td style="width: ' + widthTd2 + 'px">Наименование</td>';
@@ -52,6 +60,7 @@ window.addEventListener("load", () => {
             tmp += '<input type="text" id="inputWeight" style="width: ' + (widthTd3 - 10) + 'px; height: 22px"/>';
             tmp += '<button id="SubmitSearch">Отправить</button>';
             tmp += '</div>';
+            tmp += '<div id="containerDietaryRation"></div>';
             document.getElementById("column1").innerHTML = tmp;
             document.getElementById("inputSearch").focus();
         }
@@ -77,6 +86,10 @@ window.addEventListener("load", () => {
 
         let addSearchTableEvent = function (e) {
             if (e.target.id === "item1a") {
+                productSearchArray.length = 0;
+                dailyCalorieContent = 0;
+                userRationDate.length = 0;
+                calorieCount = 0;
                 createDietPageHead();
                 createLocalTime();
                 addFullProductList();
@@ -99,6 +112,7 @@ window.addEventListener("load", () => {
             }
 
             if (productValue.length >= 3) {
+                productSearchArray.length = 0;
                 for (let i = 0; i < products.length; i++) {
                     let charAp = productValue.charAt(0).toLocaleUpperCase();
                     let newProductValue = charAp + productValue.substring(1, productValue.length);
@@ -115,6 +129,7 @@ window.addEventListener("load", () => {
                             productSearchArray.push(products[i]);
                         }
                     }
+
                     if (i === (products.length - 1)) {
                         if (productSearchArray.length > 0) {
                             let tmp = '';
@@ -144,6 +159,8 @@ window.addEventListener("load", () => {
                                     }
                                 }
                             }
+                        } else {
+                            document.getElementById("containerSelect").innerHTML = '';
                         }
                     }
                 }
@@ -176,6 +193,7 @@ window.addEventListener("load", () => {
                 let weightInt = parseInt(weight);
                 if (weightInt > 0) {
                     let productName = document.getElementById("inputSearch").value;
+                    let id = document.getElementById("inputSearch").id;
                     if (productName !== '') {
                         for (let i = 0; i < products.length; i++) {
                             if (productName === products[i].productName) {
@@ -200,6 +218,9 @@ window.addEventListener("load", () => {
                                 xhr1.send(sendJson);
                                 productValue = '';
                                 productSearchArray.length = 0;
+                                dailyCalorieContent = 0;
+                                userRationDate.length = 0;
+                                calorieCount = 0;
                                 createDietPageHead();
                                 createLocalTime();
                                 loadUserDiet();
@@ -215,12 +236,15 @@ window.addEventListener("load", () => {
         let loadUserDiet = function () {
             let tmp = "";
             const xhr1 = new XMLHttpRequest();
-            xhr1.open('GET', 'http://localhost:8080/api/v1/product/allRation', false);
+            xhr1.open('GET', 'http://localhost:8080/api/v1/product/allRation' + '/' + pathCount, false);
             xhr1.send();
             ration = JSON.parse(xhr1.responseText);
             for (let i = 0; i < ration.length; i++) {
                 let now = new Date();
                 let dateAdded = new Date(ration[i].dateAdded);
+                userYear = dateAdded.getFullYear();
+                userMonth = dateAdded.getMonth() + 1;
+                userDay = dateAdded.getDate();
                 let year = now.getFullYear();
                 let month = now.getMonth() + 1;
                 let day = now.getDate();
@@ -236,7 +260,7 @@ window.addEventListener("load", () => {
                 }
                 let timeDateAdded = hoursDateAdded + " : " + minutesDateAdded;
 
-                if (year === dateAdded.getFullYear() && month === (dateAdded.getMonth() + 1) && day === dateAdded.getDate()) {
+                if (year === userYear && month === userMonth && day === userDay) {
                     tmp += createDietTableTBody(timeDateAdded, ration[i].productTitle, ration[i].productWeight, ration[i].productProteins, ration[i].productFats, ration[i].productCarbohydrates, ration[i].calorieContent)
                     dailyCalorieContent += Number(ration[i].calorieContent);
                 }
@@ -244,6 +268,8 @@ window.addEventListener("load", () => {
             }
             insertProduct(tmp);
             createDietTableTFoot();
+            countNumbersOfDates();
+            createHistoryTable();
         }
 
 
@@ -304,12 +330,268 @@ window.addEventListener("load", () => {
             }
         }
 
+        let countNumbersOfDates = function () {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            for (let i = 0; i < ration.length - 1; i++) {
+                let date1 = new Date(ration[i].dateAdded);
+                let date2 = new Date(ration[i + 1].dateAdded);
+                let userDate1 = date1.getDate();
+                let userDate2 = date2.getDate();
+                let userYear = date1.getFullYear();
+                let userMonth = date1.getMonth() + 1;
+                let userDay = date1.getDate();
+                if (i === 0) {
+                    if (day !== userDay) {
+                        userRationDate.push(date1);
+                    } else {
+                        if (month !== userMonth) {
+                            userRationDate.push(date1);
+                        } else {
+                            if (year !== userYear) {
+                                userRationDate.push(date1);
+                            }
+                        }
+                    }
+                }
+
+                if (userDate1 !== userDate2) {
+                    userRationDate.push(date2);
+                }
+            }
+        }
+
+        let createHistoryTable = function () {
+            for (let j = 0; j < userRationDate.length; j++) {
+                calorieCount = 0;
+                let date = userRationDate[j];
+                let userYear = date.getFullYear();
+                let userMonth = date.getMonth() + 1;
+                let userDay = date.getDate();
+                if (userMonth === 1) {
+                    userMonth = "Января"
+                }
+                if (userMonth === 2) {
+                    userMonth = "Февраля"
+                }
+                if (userMonth === 3) {
+                    userMonth = "Марта"
+                }
+                if (userMonth === 4) {
+                    userMonth = "Апреля"
+                }
+                if (userMonth === 5) {
+                    userMonth = "Мая"
+                }
+                if (userMonth === 6) {
+                    userMonth = "Июня"
+                }
+                if (userMonth === 7) {
+                    userMonth = "Июля"
+                }
+                if (userMonth === 8) {
+                    userMonth = "Августа"
+                }
+                if (userMonth === 9) {
+                    userMonth = "Сентября"
+                }
+                if (userMonth === 10) {
+                    userMonth = "Октября"
+                }
+                if (userMonth === 11) {
+                    userMonth = "Ноября"
+                }
+                if (userMonth === 12) {
+                    userMonth = "Декабря"
+                }
+                let container = document.getElementById("containerDietaryRation");
+                let p = document.createElement("p");
+                p.className = "title";
+                p.innerText = userDay + " " + userMonth + " " + userYear;
+                p.style.borderWidth = "0 0 2px 0";
+                p.style.borderColor = "black";
+                p.style.borderStyle = "solid";
+                p.style.paddingBottom = "15px";
+                p.style.width = tableWidth + "px";
+                container.appendChild(p);
+                let table = document.createElement("table");
+                table.className = "pageDietTable";
+                table.style.width = tableWidth + "px";
+                let tHead = document.createElement("thead");
+                tHead.className = "pageDietThead";
+                let trThead = document.createElement("tr");
+                let tdThead1 = document.createElement("td");
+                tdThead1.innerText = "Время";
+                tdThead1.style.width = widthTd1 + "px";
+
+                let tdThead2 = document.createElement("td");
+                tdThead2.innerText = "Наименование";
+                tdThead2.style.width = widthTd2 + "px";
+
+                let tdThead3 = document.createElement("td");
+                tdThead3.innerText = "Вес";
+                tdThead3.style.width = widthTd3 + "px";
+
+                let tdThead4 = document.createElement("td");
+                tdThead4.innerText = "Белки";
+                tdThead4.style.width = widthTd4 + "px";
+
+                let tdThead5 = document.createElement("td");
+                tdThead5.innerText = "Жиры";
+                tdThead5.style.width = widthTd5 + "px";
+
+                let tdThead6 = document.createElement("td");
+                tdThead6.innerText = "Углеводы";
+                tdThead6.style.width = widthTd6 + "px";
+                let tdThead7 = document.createElement("td");
+                tdThead7.innerText = "Ккалл";
+                tdThead7.style.width = widthTd7 + "px";
+                trThead.appendChild(tdThead1);
+                trThead.appendChild(tdThead2);
+                trThead.appendChild(tdThead3);
+                trThead.appendChild(tdThead4);
+                trThead.appendChild(tdThead5);
+                trThead.appendChild(tdThead6);
+                trThead.appendChild(tdThead7);
+                tHead.appendChild(trThead);
+                table.appendChild(tHead);
+                let tBody = document.createElement("tBody");
+                tBody.id = "tbodyDietTable" + userYear + userMonth + userDay;
+                table.appendChild(tBody);
+                let tFoot = document.createElement("tFoot");
+                tFoot.id = "tfootDietTable" + userYear + userMonth + userDay;
+                tFoot.style.borderStyle = "solid";
+                tFoot.style.borderWidth = "1px 0 0 0";
+                tFoot.style.borderColor = "black";
+                table.appendChild(tFoot);
+                container.appendChild(table);
+                createDietTableContent(date, userYear, userMonth, userDay);
+            }
+        }
+
+
+        let createDietTableContent = function (date, userYearId, userMonthId, userDayId) {
+            let userYear = date.getFullYear();
+            let userMonth = date.getMonth() + 1;
+            let userDay = date.getDate();
+            for (let i = 0; i < ration.length; i++) {
+                let date1 = new Date(ration[i].dateAdded);
+                let productYear = date1.getFullYear();
+                let productMonth = date1.getMonth() + 1;
+                let productDay = date1.getDate();
+                if (userYear === productYear && userMonth === productMonth && userDay === productDay) {
+                    let hoursDateAdded = date1.getHours();
+                    let minutesDateAdded = date1.getMinutes();
+                    if (hoursDateAdded < 10) {
+                        hoursDateAdded = "0" + hoursDateAdded;
+                    }
+
+
+                    if (minutesDateAdded < 10) {
+                        minutesDateAdded = "0" + date1.getMinutes();
+                    }
+                    let timeDateAdded = hoursDateAdded + " : " + minutesDateAdded;
+
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerText = timeDateAdded;
+                    let td2 = document.createElement("td");
+                    td2.innerText = ration[i].productTitle;
+                    let td3 = document.createElement("td");
+                    td3.innerText = ration[i].productWeight;
+                    let td4 = document.createElement("td");
+                    td4.innerText = ration[i].productProteins;
+                    let td5 = document.createElement("td");
+                    td5.innerText = ration[i].productFats;
+                    let td6 = document.createElement("td");
+                    td6.innerText = ration[i].productCarbohydrates;
+                    let td7 = document.createElement("td");
+                    td7.innerText = ration[i].calorieContent;
+
+                    calorieCount += Number(ration[i].calorieContent);
+                    calorieCount = Math.floor(calorieCount * 100) / 100;
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+                    tr.appendChild(td6);
+                    tr.appendChild(td7);
+                    let id = "tbodyDietTable" + userYearId + userMonthId + userDayId;
+                    let tBody = document.getElementById(id);
+                    tBody.appendChild(tr);
+                }
+            }
+            let id = "tfootDietTable" + userYearId + userMonthId + userDayId;
+            let tfoot = document.getElementById(id);
+            let tr1 = document.createElement("tr");
+            let td1 = document.createElement("td");
+            let td2 = document.createElement("td");
+            let td3 = document.createElement("td");
+            let td4 = document.createElement("td");
+            let td5 = document.createElement("td");
+            let td6 = document.createElement("td");
+            let td7 = document.createElement("td");
+            td7.innerText = "Итого :";
+            td7.style.fontWeight = "bold";
+            tr1.appendChild(td1);
+            tr1.appendChild(td2);
+            tr1.appendChild(td3);
+            tr1.appendChild(td4);
+            tr1.appendChild(td5);
+            tr1.appendChild(td6);
+            tr1.appendChild(td7);
+            tfoot.appendChild(tr1);
+
+
+            let tr2 = document.createElement("tr");
+            let td8 = document.createElement("td");
+            let td9 = document.createElement("td");
+            let td10 = document.createElement("td");
+            let td11 = document.createElement("td");
+            let td12 = document.createElement("td");
+            let td13 = document.createElement("td");
+            let td14 = document.createElement("td");
+            td14.innerText = calorieCount;
+            tr2.appendChild(td8);
+            tr2.appendChild(td9);
+            tr2.appendChild(td10);
+            tr2.appendChild(td11);
+            tr2.appendChild(td12);
+            tr2.appendChild(td13);
+            tr2.appendChild(td14);
+            tfoot.appendChild(tr2);
+        }
+
 
         createDietPageHead();
         createLocalTime();
         addFullProductList();
         clickButtonOnInputField();
         loadUserDiet();
+
+        window.onscroll = function () {
+            let windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
+            if (windowRelativeBottom < document.documentElement.clientHeight + 5) {
+                if (sendRequest === false) {
+                    const xhr1 = new XMLHttpRequest();
+                    xhr1.open('GET', 'http://localhost:8080/api/v1/product/allRation' + '/' + pathCount, false);
+                    xhr1.send();
+                    ration = JSON.parse(xhr1.responseText);
+                    pathCount += 2;
+                    sendRequest = true;
+                    userRationDate.length = 0;
+                    productSearchArray.length = 0;
+                    countNumbersOfDates();
+                    document.getElementById("containerDietaryRation").innerHTML = "";
+                    createHistoryTable();
+                    sendRequest = false;
+                }
+            }
+        }
+
         document.body.addEventListener("click", addSearchTableEvent);
         document.body.addEventListener("keyup", clickButton);
         document.body.addEventListener("click", pushButtonSubmitSearchProduct);

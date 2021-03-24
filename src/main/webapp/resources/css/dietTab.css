@@ -6,18 +6,18 @@
     font-size: 22px;
 }
 
-#titleToday {
+.title {
     font-weight: bold;
     font-size: 18px;
     margin-left: 10px;
 }
 
-#pageDietTable {
+.pageDietTable {
     border-collapse: collapse;
     margin-left: 10px;
 }
 
-#pageDietThead td {
+.pageDietThead td {
     border-width: 2px 0 1px 0;
     border-color: black;
     border-style: solid;
@@ -78,5 +78,8 @@
     background-color: rgb(238, 238, 236) ;
 }
 #pageDietTFoot tr:nth-child(odd){
+    border-width: 2px 0 0 0;
+    border-style: solid;
+    border-color: #909090;
     background-color: rgb(238, 238, 236) ;
 }

@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
         let widthTd3;
         let widthTd4;
         let widthTd5;
-        let productArray = new Array();
+        let productArray = [];
         let products;
         let addProductsHeader = function (e) {
             if (e.target.id === "item1b" || e.target.id === "backUp") {
@@ -138,7 +138,7 @@ window.addEventListener("load", () => {
 
                 let input = document.getElementById(idTd);
                 input.onchange = function () {
-                    const url = 'http://localhost:8080/api/v1/product/create';
+                    const url = 'http://localhost:8080/api/v1/product/edit';
                     let valueInfo = input.id;
                     let value = input.firstChild.value;
                     let td = document.getElementById(idTd);
@@ -489,7 +489,7 @@ window.addEventListener("load", () => {
             idTd = null;
             let sendJson = JSON.stringify({newProduct: value, productParameter: valueInfo});
             const xhr1 = new XMLHttpRequest();
-            xhr1.open('POST', 'http://localhost:8080/api/v1/product/create');
+            xhr1.open('POST', 'http://localhost:8080/api/v1/product/edit');
             xhr1.setRequestHeader('Content-Type', 'application/json');
             xhr1.send(sendJson);
         }
