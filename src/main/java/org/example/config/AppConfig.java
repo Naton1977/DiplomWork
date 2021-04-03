@@ -31,7 +31,7 @@ public class AppConfig {
         hikariDataSource.setJdbcUrl(url);
         hikariDataSource.setUsername(userName);
         hikariDataSource.setPassword(password);
-        hikariDataSource.setDriverClassName("org.mariadb.jdbc.Driver");
+        hikariDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         return hikariDataSource;
     }
 }

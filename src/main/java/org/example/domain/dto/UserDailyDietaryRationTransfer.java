@@ -4,7 +4,7 @@ package org.example.domain.dto;
 
 public class UserDailyDietaryRationTransfer {
 
-    private int id;
+    private long id;
 
     private String dateAdded;
 
@@ -36,11 +36,11 @@ public class UserDailyDietaryRationTransfer {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

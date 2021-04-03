@@ -7,21 +7,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "product")
-public class Product{
+public class Product {
 
 
     public Product() {
 
     }
-
-    public Product(String productName, double proteins, double fats, double carbohydrates, double calorieContent) {
-        this.productName = productName;
-        this.proteins = proteins;
-        this.fats = fats;
-        this.carbohydrates = carbohydrates;
-        this.calorieContent = calorieContent;
-    }
-
 
     @Column(name = "product_id")
     @Id
@@ -53,6 +44,7 @@ public class Product{
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<DiaryUser> diaryUserSet = new HashSet<>();
+
 
     public int getProductId() {
         return productId;
@@ -111,6 +103,14 @@ public class Product{
     }
 
     public void setUserSet(Set<DiaryUser> diaryUserSet) {
+        this.diaryUserSet = diaryUserSet;
+    }
+
+    public Set<DiaryUser> getDiaryUserSet() {
+        return diaryUserSet;
+    }
+
+    public void setDiaryUserSet(Set<DiaryUser> diaryUserSet) {
         this.diaryUserSet = diaryUserSet;
     }
 

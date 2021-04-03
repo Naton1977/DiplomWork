@@ -139,14 +139,6 @@ window.addEventListener("load", () => {
     );
 
 
-    let eventCalendar = function (e) {
-        console.log(e.target.id);
-        if (e.target.id === "calendar_table") {
-            console.log("calendar")
-        }
-
-    }
-
     document.getElementById("calendar_table").addEventListener("click", function (e) {
         let value = e.target.attributes[1].nodeValue;
         let index1 = value.indexOf("(");
@@ -158,7 +150,6 @@ window.addEventListener("load", () => {
         xhr1.open('GET', 'http://localhost:8080/api/v1/product/specified' + '/' + newSt, false);
         xhr1.send();
         prod = JSON.parse(xhr1.responseText);
-        console.log(prod);
         if (prod.length > 0) {
             document.getElementById("containerDietaryRation").innerHTML = "";
             let containerWidth = document.getElementById("column1").offsetWidth;

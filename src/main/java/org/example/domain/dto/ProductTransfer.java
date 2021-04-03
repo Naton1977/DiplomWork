@@ -2,7 +2,7 @@ package org.example.domain.dto;
 
 public class ProductTransfer {
 
-    private int productId;
+    private long productId;
     private String productName;
     private String proteins;
     private String fats;
@@ -22,11 +22,11 @@ public class ProductTransfer {
         this.calorieContent = calorieContent;
     }
 
-    public int getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 

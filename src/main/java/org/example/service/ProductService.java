@@ -1,23 +1,16 @@
 package org.example.service;
 
 
-import org.example.domain.dto.NewProductTheDailyDiet;
-import org.example.domain.entity.BodyParameters;
-import org.example.domain.entity.DailyDietaryRation;
-import org.example.domain.entity.DiaryUser;
-import org.example.domain.entity.Product;
-import org.example.repository.BodyParametersRepository;
-import org.example.repository.DailyDietaryRationRepository;
-import org.example.repository.ProductRepository;
-import org.example.repository.UserRepository;
+import org.decimal4j.util.DoubleRounder;
+import org.example.domain.dto.*;
+import org.example.domain.entity.*;
+import org.example.repository.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,12 +21,16 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final DailyDietaryRationRepository dietaryRationRepository;
     private final BodyParametersRepository bodyParametersRepository;
+    private final RecipeRepository recipeRepository;
+    private final ProductRecipeRepository productRecipeRepository;
 
-    public ProductService(UserRepository userRepository, ProductRepository productRepository, DailyDietaryRationRepository dietaryRationRepository, BodyParametersRepository bodyParametersRepository) {
+    public ProductService(UserRepository userRepository, ProductRepository productRepository, DailyDietaryRationRepository dietaryRationRepository, BodyParametersRepository bodyParametersRepository, RecipeRepository recipeRepository, ProductRecipeRepository productRecipeRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.dietaryRationRepository = dietaryRationRepository;
         this.bodyParametersRepository = bodyParametersRepository;
+        this.recipeRepository = recipeRepository;
+        this.productRecipeRepository = productRecipeRepository;
     }
 
     @Transactional
@@ -207,4 +204,268 @@ public class ProductService {
         userRepository.saveAndFlush(diaryUser);
     }
 
+    @Transactional
+    public void addNewRecipe(UserDetails principal, ProductRecipeTransfer productRecipeTransfer) {
+        boolean productPresent = false;
+        boolean newRecipe = false;
+        boolean firstRequest = false;
+        ProductRecipe productRecipe = new ProductRecipe();
+        Recipe recipe2 = new Recipe();
+        Date now = new Date();
+        DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+        if (diaryUser != null) {
+            Set<Product> productSet = diaryUser.getProductSet();
+            for (Product prod : productSet) {
+                if (prod.getProductId() == productRecipeTransfer.getProductId()) {
+                    productPresent = true;
+                    productRecipe.setProductRecipeName(prod.getProductName());
+                    productRecipe.setProteins(prod.getProteins());
+                    productRecipe.setFats(prod.getFats());
+                    productRecipe.setCarbohydrates(prod.getCarbohydrates());
+                    productRecipe.setCalorieContent(prod.getCalorieContent());
+                    productRecipe.setWeightProductRecipe(productRecipeTransfer.getProductWeight());
+                }
+            }
+
+            ProductRecipe productRecipe1 = productRecipeRepository.save(productRecipe);
+
+            if (productPresent) {
+                Set<Recipe> recipes = diaryUser.getRecipeSet();
+                if (recipes.size() == 0) {
+                    Recipe recipe = new Recipe();
+                    recipe.setRecipeName("newRecipe");
+                    recipe.setDateAdded(now);
+                    recipe.addProductRecipeSet(productRecipe1);
+                    Recipe recipe1 = recipeRepository.save(recipe);
+                    diaryUser.addRecipeSet(recipe1);
+                    userRepository.saveAndFlush(diaryUser);
+                    firstRequest = true;
+                }
+
+                if (recipes.size() > 0 && !firstRequest) {
+                    Set<Recipe> recipeSet = diaryUser.getRecipeSet();
+                    for (Recipe res : recipeSet) {
+                        if (res.getRecipeName().equals("newRecipe")) {
+                            newRecipe = true;
+                            recipe2.setRecipeId(res.getRecipeId());
+                            recipe2.setRecipeName(res.getRecipeName());
+                            recipe2.setProductRecipeSet(res.getProductRecipeSet());
+                            recipe2.setDateAdded(res.getDateAdded());
+                        }
+                    }
+                    if (newRecipe) {
+                        recipe2.addDiaryUserSet(diaryUser);
+                        recipe2.addProductRecipeSet(productRecipe1);
+                        recipeRepository.saveAndFlush(recipe2);
+                    } else {
+                        Recipe recipe = new Recipe();
+                        recipe.setRecipeName("newRecipe");
+                        recipe.addProductRecipeSet(productRecipe1);
+                        recipe.setDateAdded(now);
+                        Recipe recipe1 = recipeRepository.save(recipe);
+                        diaryUser.addRecipeSet(recipe1);
+                        userRepository.saveAndFlush(diaryUser);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Transactional
+    public void updateRecipe(UserDetails principal, RecipeTransfer recipeTransfer) {
+        double proteins = 0;
+        double fats = 0;
+        double carbohydrates = 0;
+        double calorieContent = 0;
+        DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+        Set<Recipe> recipes = diaryUser.getRecipeSet();
+        Recipe recipe = new Recipe();
+        for (Recipe res : recipes) {
+            if (res.getRecipeName().equals("newRecipe")) {
+                recipe.setRecipeName(recipeTransfer.getRecipeTitle());
+                recipe.setRecipeId(res.getRecipeId());
+                recipe.addDiaryUserSet(diaryUser);
+                recipe.setProductRecipeSet(res.getProductRecipeSet());
+                recipe.setDateAdded(res.getDateAdded());
+            }
+        }
+
+        Set<ProductRecipe> productRecipes = recipe.getProductRecipeSet();
+        for (ProductRecipe prodRec : productRecipes) {
+            double productWeight = (prodRec.getWeightProductRecipe() / 100);
+            proteins += prodRec.getProteins() * productWeight;
+            fats += prodRec.getFats() * productWeight;
+            carbohydrates += prodRec.getCarbohydrates() * productWeight;
+            calorieContent += prodRec.getCalorieContent() * productWeight;
+        }
+
+        proteins = proteins / productRecipes.size();
+        fats = fats / productRecipes.size();
+        carbohydrates = carbohydrates / productRecipes.size();
+        calorieContent = calorieContent / productRecipes.size();
+        recipe.setProteins(proteins);
+        recipe.setFats(fats);
+        recipe.setCarbohydrates(carbohydrates);
+        recipe.setCalorieContent(calorieContent);
+        recipeRepository.saveAndFlush(recipe);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AllRecipeListTransfer> createAllRecipeList(UserDetails principal) {
+        DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+        if (diaryUser != null) {
+            Set<Recipe> recipes = diaryUser.getRecipeSet();
+            List<Recipe> recipeList = recipes.stream().sorted(Comparator.comparing(Recipe::getRecipeName)).collect(Collectors.toList());
+            List<AllRecipeListTransfer> allRecipeListTransfers = new ArrayList<>();
+            for (Recipe value : recipeList) {
+                AllRecipeListTransfer allRecipeListTransfer = new AllRecipeListTransfer();
+                allRecipeListTransfer.setRecipeId(value.getRecipeId());
+                allRecipeListTransfer.setRecipeName(value.getRecipeName());
+                allRecipeListTransfer.setProteins(value.getProteins());
+                allRecipeListTransfer.setFats(value.getFats());
+                allRecipeListTransfer.setCarbohydrates(value.getCarbohydrates());
+                allRecipeListTransfer.setCalorieContent(value.getCalorieContent());
+                SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+                allRecipeListTransfer.setDateAdded(formatDate.format(value.getDateAdded()));
+                allRecipeListTransfers.add(allRecipeListTransfer);
+            }
+            return allRecipeListTransfers;
+        }
+        return null;
+    }
+
+    @Transactional
+    public List<UserDailyDietaryRationTransfer> findProductsOnTheSpecifiedDate(UserDetails principal, String date) {
+        List<UserDailyDietaryRationTransfer> dailyDietaryRationTransfers = new ArrayList<>();
+        List<DailyDietaryRation> dietaryRationList = createUserProductDailyDiaryRationList(principal);
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-M-yyyy");
+        for (DailyDietaryRation ration : dietaryRationList) {
+            String userDate = formatDate.format(ration.getDateAdded());
+            if (userDate.equals(date)) {
+                double calorieContent = (ration.getProductWeight() * ration.getCalorieContent() / 100);
+                UserDailyDietaryRationTransfer userDailyDietaryRationTransfer = new UserDailyDietaryRationTransfer();
+                userDailyDietaryRationTransfer.setId(ration.getId());
+                userDailyDietaryRationTransfer.setDateAdded(ration.getDateAdded().toString());
+                userDailyDietaryRationTransfer.setProductProteins(Double.toString(DoubleRounder.round(ration.getProductProteins(), 2)));
+                userDailyDietaryRationTransfer.setProductFats(Double.toString(DoubleRounder.round(ration.getProductFats(), 2)));
+                userDailyDietaryRationTransfer.setProductTitle(ration.getProductTitle());
+                userDailyDietaryRationTransfer.setProductCarbohydrates(Double.toString(DoubleRounder.round(ration.getProductCarbohydrates(), 2)));
+                userDailyDietaryRationTransfer.setCalorieContent(Double.toString(DoubleRounder.round(calorieContent, 2)));
+                userDailyDietaryRationTransfer.setProductWeight(Double.toString(DoubleRounder.round(ration.getProductWeight(), 2)));
+                dailyDietaryRationTransfers.add(userDailyDietaryRationTransfer);
+            }
+        }
+        return dailyDietaryRationTransfers;
+    }
+
+
+    @Transactional
+    public List<UserDailyDietaryRationTransfer> allDailyRations(UserDetails principal, int path) {
+        List<String> userDateList = new ArrayList<>();
+        List<DailyDietaryRation> dietaryRationList = createUserProductDailyDiaryRationList(principal);
+        Date now = new Date();
+        List<UserDailyDietaryRationTransfer> dailyDietaryRationTransfers = new ArrayList<>();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNow = formatDate.format(now);
+        for (int i = 0; i < dietaryRationList.size() - 1; i++) {
+            String userDate = formatDate.format(dietaryRationList.get(i).getDateAdded());
+            String userDateFuture = formatDate.format(dietaryRationList.get(i + 1).getDateAdded());
+            if (i == 0) {
+                userDateList.add(userDate);
+            }
+
+            if (!userDate.equals(userDateFuture)) {
+                userDateList.add(userDateFuture);
+            }
+        }
+        if (path < 0) {
+            path = 0;
+        }
+        if (userDateList.size() > 0) {
+            if (dateNow.equals(userDateList.get(0))) {
+                path += 1;
+            }
+        }
+
+        if (path > (userDateList.size() - 1)) {
+            path = (userDateList.size() - 1);
+        }
+
+        for (int i = 0; i < dietaryRationList.size(); i++) {
+            double calorieContent = (dietaryRationList.get(i).getProductWeight() * dietaryRationList.get(i).getCalorieContent() / 100);
+            UserDailyDietaryRationTransfer userDailyDietaryRationTransfer = new UserDailyDietaryRationTransfer();
+            String userDate = formatDate.format(dietaryRationList.get(i).getDateAdded());
+            if (userDate.equals(userDateList.get(path))) {
+                if (path != (userDateList.size() - 1)) {
+                    break;
+                }
+            }
+            userDailyDietaryRationTransfer.setId(dietaryRationList.get(i).getId());
+            userDailyDietaryRationTransfer.setDateAdded(dietaryRationList.get(i).getDateAdded().toString());
+            userDailyDietaryRationTransfer.setProductProteins(Double.toString(DoubleRounder.round(dietaryRationList.get(i).getProductProteins(), 2)));
+            userDailyDietaryRationTransfer.setProductFats(Double.toString(DoubleRounder.round(dietaryRationList.get(i).getProductFats(), 2)));
+            userDailyDietaryRationTransfer.setProductTitle(dietaryRationList.get(i).getProductTitle());
+            userDailyDietaryRationTransfer.setProductCarbohydrates(Double.toString(DoubleRounder.round(dietaryRationList.get(i).getProductCarbohydrates(), 2)));
+            userDailyDietaryRationTransfer.setCalorieContent(Double.toString(DoubleRounder.round(calorieContent, 2)));
+            userDailyDietaryRationTransfer.setProductWeight(Double.toString(DoubleRounder.round(dietaryRationList.get(i).getProductWeight(), 2)));
+            dailyDietaryRationTransfers.add(userDailyDietaryRationTransfer);
+        }
+        return dailyDietaryRationTransfers;
+    }
+
+
+    @Transactional
+    public void createNewProduct(UserDetails principal, NewProductDto newProductDto) {
+        boolean isPresent = false;
+        Product product = new Product();
+        product.setProductName(newProductDto.getProductName());
+        try {
+            product.setProteins(Double.parseDouble(newProductDto.getProteins()));
+            product.setFats(Double.parseDouble(newProductDto.getFats()));
+            product.setCarbohydrates(Double.parseDouble(newProductDto.getCarbohydrates()));
+            product.setCalorieContent(Double.parseDouble(newProductDto.getCalorieContent()));
+            DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+            if (diaryUser != null) {
+                Set<Product> productSet = diaryUser.getProductSet();
+                for (Product prod : productSet) {
+                    if (prod.getProductName().equals(product.getProductName())) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                if (!isPresent) {
+                    Product product1 = addNewProduct(product);
+                    product.setProductId(product1.getProductId());
+                    diaryUser.addProductSet(product);
+                    updateUser(diaryUser);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    @Transactional
+    public List<ProductTransfer> productsTabContentJson(UserDetails principal) {
+        DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+        if (diaryUser != null) {
+            Set<Product> productSet = diaryUser.getProductSet();
+            List<Product> productList = productSet.stream().sorted(Comparator.comparing(Product::getProductName)).collect(Collectors.toList());
+            List<ProductTransfer> productTransfers = new ArrayList<>();
+            for (Product product : productList) {
+                ProductTransfer productTransfer = new ProductTransfer();
+                productTransfer.setProductId(product.getProductId());
+                productTransfer.setProductName(product.getProductName());
+                productTransfer.setProteins(Double.toString(DoubleRounder.round(product.getProteins(), 2)));
+                productTransfer.setFats(Double.toString(DoubleRounder.round(product.getFats(), 2)));
+                productTransfer.setCarbohydrates(Double.toString(DoubleRounder.round(product.getCarbohydrates(), 2)));
+                productTransfer.setCalorieContent(Double.toString(DoubleRounder.round(product.getCalorieContent(), 2)));
+                productTransfers.add(productTransfer);
+            }
+            return productTransfers;
+        }
+        return null;
+    }
 }

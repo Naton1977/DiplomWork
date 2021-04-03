@@ -49,8 +49,23 @@ public class DiaryUser {
     private Set<BodyParameters> bodyParametersSet = new HashSet<>();
 
 
+    @ManyToMany
+    @JoinTable(name = "user_recipe",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    private Set<Recipe> recipeSet = new HashSet<>();
+
+
     public DiaryUser() {
 
+    }
+
+    public Set<Recipe> getRecipeSet() {
+        return recipeSet;
+    }
+
+    public void setRecipeSet(Set<Recipe> recipeSet) {
+        this.recipeSet = recipeSet;
     }
 
     public int getUserId() {
@@ -129,8 +144,13 @@ public class DiaryUser {
         productSet.add(product);
     }
 
+
     public void addDailyDietaryRations(DailyDietaryRation dailyDietaryRation) {
         dailyDietaryRations.add(dailyDietaryRation);
+    }
+
+    public void addRecipeSet(Recipe recipe) {
+        recipeSet.add(recipe);
     }
 
     public void addBodyParameters(BodyParameters bodyParameters) {
