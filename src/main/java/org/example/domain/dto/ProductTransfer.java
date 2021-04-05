@@ -1,6 +1,6 @@
 package org.example.domain.dto;
 
-public class ProductTransfer {
+public class ProductTransfer implements Comparable<ProductTransfer> {
 
     private long productId;
     private String productName;
@@ -8,19 +8,12 @@ public class ProductTransfer {
     private String fats;
     private String carbohydrates;
     private String calorieContent;
+    private String categoryProduct;
 
     public ProductTransfer(){
 
     }
 
-    public ProductTransfer(int productId, String productName, String proteins, String fats, String carbohydrates, String calorieContent) {
-        this.productId = productId;
-        this.productName = productName;
-        this.proteins = proteins;
-        this.fats = fats;
-        this.carbohydrates = carbohydrates;
-        this.calorieContent = calorieContent;
-    }
 
     public long getProductId() {
         return productId;
@@ -70,6 +63,14 @@ public class ProductTransfer {
         this.calorieContent = calorieContent;
     }
 
+    public String getCategoryProduct() {
+        return categoryProduct;
+    }
+
+    public void setCategoryProduct(String categoryProduct) {
+        this.categoryProduct = categoryProduct;
+    }
+
     @Override
     public String toString() {
         return "ProductTransfer{" +
@@ -79,6 +80,12 @@ public class ProductTransfer {
                 ", fats='" + fats + '\'' +
                 ", carbohydrates='" + carbohydrates + '\'' +
                 ", calorieContent='" + calorieContent + '\'' +
+                ", categoryProduct='" + categoryProduct + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(ProductTransfer o) {
+        return productName.compareTo(o.getProductName());
     }
 }

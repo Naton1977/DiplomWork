@@ -9,17 +9,13 @@ public class NewProductTheDailyDiet {
     private Integer weight;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm",timezone = "Europe/Kiev")
     private Date time;
+    private String productCategory;
 
 
     public NewProductTheDailyDiet(){
 
     }
 
-    public NewProductTheDailyDiet(Integer productId, Integer weight, Date time) {
-        this.productId = productId;
-        this.weight = weight;
-        this.time = time;
-    }
 
     public Integer getProductId() {
         return productId;
@@ -45,12 +41,21 @@ public class NewProductTheDailyDiet {
         this.time = time;
     }
 
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
+
     @Override
     public String toString() {
         return "NewProductTheDailyDiet{" +
                 "productId=" + productId +
                 ", weight=" + weight +
                 ", time=" + time +
+                ", productCategory='" + productCategory + '\'' +
                 '}';
     }
 }

@@ -163,19 +163,39 @@ public class ProductService {
         DiaryUser diaryUser = userRepository.userByLogin(principal.getUsername());
         if (diaryUser != null) {
             Set<Product> products = diaryUser.getProductSet();
-            for (Product product : products) {
-                if (product.getProductId() == newProductTheDailyDiet.getProductId()) {
-                    Product product1 = productRepository.getOne(product.getProductId());
-                    DailyDietaryRation dietaryRation = new DailyDietaryRation();
-                    dietaryRation.setDateAdded(newProductTheDailyDiet.getTime());
-                    dietaryRation.setProductTitle(product1.getProductName());
-                    dietaryRation.setProductProteins(product1.getProteins());
-                    dietaryRation.setProductFats(product1.getFats());
-                    dietaryRation.setProductCarbohydrates(product1.getCarbohydrates());
-                    dietaryRation.setCalorieContent(product1.getCalorieContent());
-                    dietaryRation.setProductWeight(newProductTheDailyDiet.getWeight());
-                    dietaryRation.addDailyDiaryUserSet(diaryUser);
-                    dietaryRationRepository.save(dietaryRation);
+            Set<Recipe> recipeSet = diaryUser.getRecipeSet();
+            if (newProductTheDailyDiet.getProductCategory().equals("product")) {
+                for (Product product : products) {
+                    if (product.getProductId() == newProductTheDailyDiet.getProductId()) {
+                        Product product1 = productRepository.getOne(product.getProductId());
+                        DailyDietaryRation dietaryRation = new DailyDietaryRation();
+                        dietaryRation.setDateAdded(newProductTheDailyDiet.getTime());
+                        dietaryRation.setProductTitle(product1.getProductName());
+                        dietaryRation.setProductProteins(product1.getProteins());
+                        dietaryRation.setProductFats(product1.getFats());
+                        dietaryRation.setProductCarbohydrates(product1.getCarbohydrates());
+                        dietaryRation.setCalorieContent(product1.getCalorieContent());
+                        dietaryRation.setProductWeight(newProductTheDailyDiet.getWeight());
+                        dietaryRation.addDailyDiaryUserSet(diaryUser);
+                        dietaryRationRepository.save(dietaryRation);
+                    }
+                }
+            }
+            if (newProductTheDailyDiet.getProductCategory().equals("recipe")) {
+                for (Recipe recipe : recipeSet) {
+                    if (recipe.getRecipeId() == newProductTheDailyDiet.getProductId()) {
+                        Recipe res = recipeRepository.getOne(recipe.getRecipeId());
+                        DailyDietaryRation dietaryRation = new DailyDietaryRation();
+                        dietaryRation.setDateAdded(newProductTheDailyDiet.getTime());
+                        dietaryRation.setProductTitle(res.getRecipeName());
+                        dietaryRation.setProductProteins(res.getProteins());
+                        dietaryRation.setProductFats(res.getFats());
+                        dietaryRation.setProductCarbohydrates(res.getCarbohydrates());
+                        dietaryRation.setCalorieContent(res.getCalorieContent());
+                        dietaryRation.setProductWeight(newProductTheDailyDiet.getWeight());
+                        dietaryRation.addDailyDiaryUserSet(diaryUser);
+                        dietaryRationRepository.save(dietaryRation);
+                    }
                 }
             }
         }
@@ -468,4 +488,45 @@ public class ProductService {
         }
         return null;
     }
+
+    @Transactional
+    public List<ProductTransfer> addProductListForRecipe(UserDetails principal) {
+        DiaryUser diaryUser = findUserByLogin(principal.getUsername());
+        if (diaryUser != null) {
+            List<ProductTransfer> productTransfers = new ArrayList<>();
+            Set<Product> productSet = diaryUser.getProductSet();
+            Set<Recipe> recipeSet = diaryUser.getRecipeSet();
+            if (recipeSet.size() > 0) {
+                for (Recipe res : recipeSet) {
+                    ProductTransfer productTransfer = new ProductTransfer();
+                    productTransfer.setProductId(res.getRecipeId());
+                    productTransfer.setProductName(res.getRecipeName());
+                    productTransfer.setProteins(Double.toString(DoubleRounder.round(res.getProteins(), 2)));
+                    productTransfer.setFats(Double.toString(DoubleRounder.round(res.getFats(), 2)));
+                    productTransfer.setCarbohydrates(Double.toString(DoubleRounder.round(res.getCarbohydrates(), 2)));
+                    productTransfer.setCalorieContent(Double.toString(DoubleRounder.round(res.getCalorieContent(), 2)));
+                    productTransfer.setCategoryProduct("recipe");
+                    productTransfers.add(productTransfer);
+                }
+            }
+
+
+            for (Product product : productSet) {
+                ProductTransfer productTransfer = new ProductTransfer();
+                productTransfer.setProductId(product.getProductId());
+                productTransfer.setProductName(product.getProductName());
+                productTransfer.setProteins(Double.toString(DoubleRounder.round(product.getProteins(), 2)));
+                productTransfer.setFats(Double.toString(DoubleRounder.round(product.getFats(), 2)));
+                productTransfer.setCarbohydrates(Double.toString(DoubleRounder.round(product.getCarbohydrates(), 2)));
+                productTransfer.setCalorieContent(Double.toString(DoubleRounder.round(product.getCalorieContent(), 2)));
+                productTransfer.setCategoryProduct("product");
+                productTransfers.add(productTransfer);
+            }
+
+            return productTransfers.stream().sorted().collect(Collectors.toList());
+        }
+        return null;
+    }
+
+
 }

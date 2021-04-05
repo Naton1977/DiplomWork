@@ -1,12 +1,9 @@
 package org.example.controller;
 
 
-import org.decimal4j.util.DoubleRounder;
 import org.example.domain.entity.DailyDietaryRation;
-import org.example.domain.entity.DiaryUser;
 import org.example.service.ProductService;
 import org.example.domain.dto.*;
-import org.example.domain.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -33,7 +28,7 @@ public class RestApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductTransfer>> productsTabContentJson() throws SQLException {
+    public ResponseEntity<List<ProductTransfer>> productsTabContentJson() {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ProductTransfer> productTransfers = productService.productsTabContentJson(principal);
         if (productTransfers.size() > 0) {
@@ -50,7 +45,7 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/create/newProduct", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createNewProduct(@RequestBody NewProductDto newProductDto) throws SQLException {
+    public void createNewProduct(@RequestBody NewProductDto newProductDto) {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         productService.createNewProduct(principal, newProductDto);
     }
@@ -103,7 +98,7 @@ public class RestApiController {
     }
 
     @GetMapping(value = "/allRecipe")
-    public ResponseEntity<List<AllRecipeListTransfer>> allRecipeSend() throws SQLException {
+    public ResponseEntity<List<AllRecipeListTransfer>> allRecipeSend() {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<AllRecipeListTransfer> recipeList = productService.createAllRecipeList(principal);
         if (recipeList.size() > 0) {
@@ -111,6 +106,19 @@ public class RestApiController {
         }
         return ResponseEntity.notFound().build();
     }
+
+
+    @GetMapping("/productForRicipe")
+    public ResponseEntity<List<ProductTransfer>> addProductListForRecipe(){
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ProductTransfer> productTransfers = productService.addProductListForRecipe(principal);
+        if (productTransfers.size() > 0) {
+            return ResponseEntity.ok(productTransfers);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
 
 }
 

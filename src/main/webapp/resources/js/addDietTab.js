@@ -1,4 +1,5 @@
 window.addEventListener("load", () => {
+
         let widthTd1;
         let widthTd2;
         let widthTd3;
@@ -100,7 +101,7 @@ window.addEventListener("load", () => {
 
         let addFullProductList = function () {
             const xhr1 = new XMLHttpRequest();
-            xhr1.open('GET', 'http://localhost:8080/api/v1/product', false);
+            xhr1.open('GET', 'http://localhost:8080/api/v1/product/productForRicipe', false);
             xhr1.send();
             products = JSON.parse(xhr1.responseText);
         }
@@ -208,7 +209,8 @@ window.addEventListener("load", () => {
                                 const product = {
                                     productId: products[i].productId,
                                     weight: weightInt,
-                                    time: year + "-" + month + "-" + day + "@" + hours.trim() + ":" + minutes.trim()
+                                    time: year + "-" + month + "-" + day + "@" + hours.trim() + ":" + minutes.trim(),
+                                    productCategory: products[i].categoryProduct
                                 };
 
                                 let sendJson = JSON.stringify(product);
@@ -322,6 +324,13 @@ window.addEventListener("load", () => {
 
         let clickButtonRation = function (e) {
             if (e.target.id === "item1a") {
+                productValue = '';
+                productSearchArray = [];
+                dailyCalorieContent = 0;
+                userRationDate = [];
+                calorieCount = 0;
+                pathCount = 2;
+                sendRequest = false;
                 createDietPageHead();
                 createLocalTime();
                 addFullProductList();
@@ -591,6 +600,8 @@ window.addEventListener("load", () => {
                 }
             }
         }
+
+
 
         document.body.addEventListener("click", addSearchTableEvent);
         document.body.addEventListener("keyup", clickButton);
