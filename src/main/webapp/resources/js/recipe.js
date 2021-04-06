@@ -490,6 +490,9 @@ window.addEventListener("load", () => {
                     let li = document.createElement("li");
                     li.style.fontWeight = "bold";
                     li.innerText = allRecipe[i].recipeName + ' ' + allRecipe[i].dateAdded
+                    li.style.cursor = 'pointer';
+                    li.id = '' + allRecipe[i].recipeId + '';
+                    li.className = 'eventRecipe';
                     if (i % 2 === 0) {
                         document.getElementById("ulCol1").appendChild(li);
                     } else {
@@ -499,11 +502,60 @@ window.addEventListener("load", () => {
             }
 
 
+            let showRecipe = function (e) {
+                if (e.target.className === 'eventRecipe') {
+                    let elemId = e.target.id;
+                    elemId = Number(elemId);
+                    for (let i = 0; i < allRecipe.length; i++) {
+                        if (elemId === allRecipe[i].recipeId) {
+                            let allProduct = allRecipe[i].productRecipes;
+                            document.getElementById("column1").innerHTML = "";
+                            let tmp = '';
+                            tmp += '<div id="showRecipeHeader">' + allRecipe[i].recipeName + '<button id="showRecipeButtonComeBack">Вернуться назад</button></div>';
+                            tmp += '<table id="showRecipeTable">';
+                            tmp += '<thead>';
+                            tmp += '<tr>';
+                            tmp += '<td style="min-width: 350px">Наименование продукта</td>';
+                            tmp += '<td style="min-width: 70px">Вес</td>';
+                            tmp += '</tr>';
+                            tmp += '</thead>';
+                            tmp += '<tbody id="tbodyShowRecipe"></tbody>';
+                            tmp += '</table>';
+                            document.getElementById("column1").innerHTML = tmp;
+                            addProductRecipe(allProduct);
+                        }
+                    }
+                }
+            }
+
+            let addProductRecipe = function (allProduct) {
+                let tBody = document.getElementById("tbodyShowRecipe");
+                for (let i = 0; i < allProduct.length; i++) {
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    let td2 = document.createElement("td");
+                    td1.innerText = allProduct[i].productRecipeName;
+                    td2.innerText = allProduct[i].weightProductRecipe;
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tBody.appendChild(tr);
+                }
+            }
+
+            let pushButtonComeBackProductRecipe = function (e) {
+                if (e.target.id === 'showRecipeButtonComeBack') {
+                    createAllRecipeTable();
+                }
+            }
+
+
             document.body.addEventListener("keyup", clickButton);
             document.body.addEventListener("click", pushButtonAddProductRecipe);
             document.body.addEventListener("click", pushButtonSaveRecipe);
             document.body.addEventListener("click", pushButtonAllRecipe);
             document.body.addEventListener("click", pushButtonComeBack);
+            document.body.addEventListener("click", showRecipe);
+            document.body.addEventListener("click", pushButtonComeBackProductRecipe);
 
 
         }

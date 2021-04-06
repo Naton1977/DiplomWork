@@ -48,7 +48,7 @@
     <div id="item1c">Рецепты</div>
     <div id="item1d">Ваши параметры</div>
     <div id="item1e">Ваша ккалорийность</div>
-    <div id="item1f">Графики</div>
+<%--    <div id="item1f">Графики</div>--%>
 </div>
 <div id="main">
     <div id="mainContainer">

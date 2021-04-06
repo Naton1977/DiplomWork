@@ -348,6 +348,21 @@ public class ProductService {
                 allRecipeListTransfer.setCalorieContent(value.getCalorieContent());
                 SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
                 allRecipeListTransfer.setDateAdded(formatDate.format(value.getDateAdded()));
+                Set<ProductRecipe> productRecipesSet = value.getProductRecipeSet();
+                List<ProductRecipeDto> productRecipeDtoList = new ArrayList<>();
+                for (ProductRecipe prodRec : productRecipesSet) {
+                    ProductRecipeDto productRecipeDto = new ProductRecipeDto();
+                    productRecipeDto.setProductRecipeId(prodRec.getProductRecipeId());
+                    productRecipeDto.setProductRecipeName(prodRec.getProductRecipeName());
+                    productRecipeDto.setProteins(productRecipeDto.getProteins());
+                    productRecipeDto.setFats(prodRec.getFats());
+                    productRecipeDto.setCarbohydrates(prodRec.getCarbohydrates());
+                    productRecipeDto.setCalorieContent(prodRec.getCalorieContent());
+                    productRecipeDto.setWeightProductRecipe(prodRec.getWeightProductRecipe());
+                    productRecipeDtoList.add(productRecipeDto);
+                }
+                allRecipeListTransfer.setProductRecipes(productRecipeDtoList);
+
                 allRecipeListTransfers.add(allRecipeListTransfer);
             }
             return allRecipeListTransfers;

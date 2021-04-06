@@ -98,3 +98,27 @@
     width: 50%;
     text-align: center;
 }
+
+#showRecipeHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    font-size: 1.6vw;
+    font-weight: bold;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+#showRecipeButtonComeBack {
+     cursor: pointer;
+     border-radius: 5px;
+ }
+#showRecipeTable{
+    border-collapse: collapse;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+#showRecipeTable td{
+    border: 2px solid black;
+    text-align: center;
+    font-weight: bold;
+}

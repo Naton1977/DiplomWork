@@ -1,36 +1,29 @@
 package org.example.domain.dto;
 
+public class ProductRecipeDto {
 
-import org.example.domain.entity.ProductRecipe;
-
-import java.util.List;
-
-public class AllRecipeListTransfer {
-
-    private int recipeId;
-    private String recipeName;
+    private int productRecipeId;
+    private String productRecipeName;
     private double proteins;
     private double fats;
     private double carbohydrates;
     private double calorieContent;
-    private String dateAdded;
-    private List<ProductRecipeDto> productRecipes;
+    private double weightProductRecipe;
 
-
-    public int getRecipeId() {
-        return recipeId;
+    public int getProductRecipeId() {
+        return productRecipeId;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setProductRecipeId(int productRecipeId) {
+        this.productRecipeId = productRecipeId;
     }
 
-    public String getRecipeName() {
-        return recipeName;
+    public String getProductRecipeName() {
+        return productRecipeName;
     }
 
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
+    public void setProductRecipeName(String productRecipeName) {
+        this.productRecipeName = productRecipeName;
     }
 
     public double getProteins() {
@@ -65,32 +58,24 @@ public class AllRecipeListTransfer {
         this.calorieContent = calorieContent;
     }
 
-    public String getDateAdded() {
-        return dateAdded;
+    public double getWeightProductRecipe() {
+        return weightProductRecipe;
     }
 
-    public void setDateAdded(String dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public List<ProductRecipeDto> getProductRecipes() {
-        return productRecipes;
-    }
-
-    public void setProductRecipes(List<ProductRecipeDto> productRecipes) {
-        this.productRecipes = productRecipes;
+    public void setWeightProductRecipe(double weightProductRecipe) {
+        this.weightProductRecipe = weightProductRecipe;
     }
 
     @Override
     public String toString() {
-        return "AllRecipeListTransfer{" +
-                "recipeId=" + recipeId +
-                ", recipeName='" + recipeName + '\'' +
+        return "ProductRecipeDto{" +
+                "productRecipeId=" + productRecipeId +
+                ", productRecipeName='" + productRecipeName + '\'' +
                 ", proteins=" + proteins +
                 ", fats=" + fats +
                 ", carbohydrates=" + carbohydrates +
                 ", calorieContent=" + calorieContent +
-                ", dateAdded='" + dateAdded + '\'' +
+                ", weightProductRecipe=" + weightProductRecipe +
                 '}';
     }
 }
