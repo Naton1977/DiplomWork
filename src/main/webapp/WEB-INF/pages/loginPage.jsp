@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <c:url value="/resources/css/loginPageCSS.css" var="loginPageCSS"/>
+    <c:url value="/resources/css/loginPage.css" var="loginPageCSS"/>
     <link rel="stylesheet" href="${loginPageCSS}">
     <title>Title</title>
 </head>

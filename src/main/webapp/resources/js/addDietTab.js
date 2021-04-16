@@ -21,10 +21,13 @@ window.addEventListener("load", () => {
         let calorieCount = 0;
         let pathCount = 2;
         let sendRequest = false;
+        let containerWidth;
+        let bodyWidth;
 
         let createDietPageHead = function () {
             document.getElementById("column1").innerHTML = "";
-            let containerWidth = document.getElementById("column1").offsetWidth;
+            containerWidth = document.getElementById("column1").offsetWidth;
+            bodyWidth = document.querySelector('body').offsetWidth;
             tableWidth = (containerWidth / 100) * 98;
             widthTd1 = (containerWidth / 100) * 8;
             widthTd2 = (containerWidth / 100) * 46;
@@ -42,9 +45,11 @@ window.addEventListener("load", () => {
             tmp += '<td style="width: ' + widthTd1 + 'px">Время</td>';
             tmp += '<td style="width: ' + widthTd2 + 'px">Наименование</td>';
             tmp += '<td style="width: ' + widthTd3 + 'px">Вес</td>';
-            tmp += '<td style="width: ' + widthTd4 + 'px">Белки</td>';
-            tmp += '<td style="width: ' + widthTd5 + 'px">Жиры</td>';
-            tmp += '<td style="width: ' + widthTd6 + 'px">Углеводы</td>';
+            if (bodyWidth > 900) {
+                tmp += '<td style="width: ' + widthTd4 + 'px">Белки</td>';
+                tmp += '<td style="width: ' + widthTd5 + 'px">Жиры</td>';
+                tmp += '<td style="width: ' + widthTd6 + 'px">Углеводы</td>';
+            }
             tmp += '<td style="width: ' + widthTd7 + 'px">Ккалл</td>';
             tmp += '</tr>';
             tmp += '</thead>';
@@ -139,9 +144,8 @@ window.addEventListener("load", () => {
                             } else {
                                 tmp += '<select id="selectProductName" style="width: ' + (widthTd2 - 10) + 'px" size="5">';
                             }
-
                             for (let j = 0; j < productSearchArray.length; j++) {
-                                tmp += '<option value="' + productSearchArray[j].productId + '">' + productSearchArray[j].productName + '</option>';
+                                tmp += '<option value="' + productSearchArray[j].categoryProduct + productSearchArray[j].productId + '">' + productSearchArray[j].productName + '</option>';
                             }
                             tmp += '</select>'
                             let div = document.getElementById("containerSelect");
@@ -149,10 +153,22 @@ window.addEventListener("load", () => {
 
                             let select = document.getElementById("selectProductName");
                             select.onchange = function () {
+                                let productCategory;
                                 let value = select.value;
+                                let index1 = value.indexOf('product');
+                                let index2 = value.indexOf('recipe');
+
+                                if (index1 === 0) {
+                                    value = value.substring(7, value.length);
+                                    productCategory = 'product';
+                                }
+                                if (index2 === 0) {
+                                    value = value.substring(6, value.length);
+                                    productCategory = 'recipe';
+                                }
                                 let valueInt = parseInt(value);
                                 for (let j = 0; j < products.length; j++) {
-                                    if (valueInt === products[j].productId) {
+                                    if (valueInt === products[j].productId && productCategory === products[j].categoryProduct) {
                                         let input = document.getElementById("inputSearch");
                                         input.value = products[j].productName;
                                         document.getElementById("containerSelect").innerHTML = '';
@@ -281,9 +297,11 @@ window.addEventListener("load", () => {
             tmp += "<td>" + time + "</td>";
             tmp += "<td>" + title + "</td>";
             tmp += "<td>" + weight + "</td>";
-            tmp += "<td>" + proteins + "</td>";
-            tmp += "<td>" + fats + "</td>";
-            tmp += "<td>" + carbohidrates + "</td>";
+            if (bodyWidth > 900) {
+                tmp += "<td>" + proteins + "</td>";
+                tmp += "<td>" + fats + "</td>";
+                tmp += "<td>" + carbohidrates + "</td>";
+            }
             tmp += "<td>" + calorieContent + "</td>";
             tmp += "</tr>";
             return tmp;
@@ -295,9 +313,11 @@ window.addEventListener("load", () => {
             tmp += "<td></td>";
             tmp += "<td></td>";
             tmp += "<td></td>";
-            tmp += "<td></td>";
-            tmp += "<td></td>";
-            tmp += "<td></td>";
+            if (bodyWidth > 900) {
+                tmp += "<td></td>";
+                tmp += "<td></td>";
+                tmp += "<td></td>";
+            }
             tmp += "<td style='font-weight: bold'>Итого :</td>";
             tmp += "</tr>";
             if (dailyCalorieContent !== 0) {
@@ -306,9 +326,11 @@ window.addEventListener("load", () => {
                 tmp += "<td></td>";
                 tmp += "<td></td>";
                 tmp += "<td></td>";
-                tmp += "<td></td>";
-                tmp += "<td></td>";
-                tmp += "<td></td>";
+                if (bodyWidth > 900) {
+                    tmp += "<td></td>";
+                    tmp += "<td></td>";
+                    tmp += "<td></td>";
+                }
                 tmp += "<td>" + newCalorieContent + "</td>";
                 tmp += "</tr>";
             }
@@ -600,8 +622,6 @@ window.addEventListener("load", () => {
                 }
             }
         }
-
-
 
         document.body.addEventListener("click", addSearchTableEvent);
         document.body.addEventListener("keyup", clickButton);

@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <c:url value="/resources/css/diaryPageCSS.css" var="diaryPageCSS"/>
+    <c:url value="/resources/css/diaryPage.css" var="diaryPageCSS"/>
     <link rel="stylesheet" href="${diaryPageCSS}">
     <c:url value="/resources/fonts/fontawesome-free-5.14.0-web/css/all.css" var="fonts"/>
     <link rel="stylesheet" href="${fonts}">
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="${addFigire}"></script>
     <c:url value="/resources/js/productsTab.js" var="prodactsTab"/>
     <script type="text/javascript" src="${prodactsTab}"></script>
-    <c:url value="/resources/css/productsTabContentCSS.css" var="productsTabContent"/>
+    <c:url value="/resources/css/productsTabContent.css" var="productsTabContent"/>
     <link rel="stylesheet" type="text/css" href="${productsTabContent}">
     <c:url value="/resources/js/addDietTab.js" var="dietTab"/>
     <script type="text/javascript" src="${dietTab}"></script>
@@ -48,7 +48,6 @@
     <div id="item1c">Рецепты</div>
     <div id="item1d">Ваши параметры</div>
     <div id="item1e">Ваша ккалорийность</div>
-<%--    <div id="item1f">Графики</div>--%>
 </div>
 <div id="main">
     <div id="mainContainer">

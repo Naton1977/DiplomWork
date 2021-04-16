@@ -250,6 +250,7 @@ window.addEventListener("load", () => {
 
                                 let select = document.getElementById("selectProductRecipe");
                                 select.onchange = function () {
+                                    productValue = '';
                                     let value = select.value;
                                     let valueInt = parseInt(value);
                                     for (let j = 0; j < products.length; j++) {
@@ -309,6 +310,7 @@ window.addEventListener("load", () => {
                     }
 
                     if (productPresent && weightCorrect) {
+                        productValue = '';
                         let tBody = document.getElementById('tbodyRecipe');
                         let tr = document.createElement('tr');
                         tr.className = 'products';
@@ -327,7 +329,6 @@ window.addEventListener("load", () => {
                         input1.value = '';
                         input1.focus();
                         input2.value = '';
-                        productValue = '';
 
                         const productRecipe = {
                             productId: productId,
@@ -339,7 +340,7 @@ window.addEventListener("load", () => {
                         xhr1.open('POST', 'http://localhost:8080/api/v1/product/productRecipe', false);
                         xhr1.setRequestHeader('Content-Type', 'application/json');
                         xhr1.send(sendJson);
-
+                        productSearchArray.length = 0;
                     }
                 }
             }
@@ -418,21 +419,21 @@ window.addEventListener("load", () => {
                         xhr1.open('POST', 'http://localhost:8080/api/v1/product/saveRecipe', false);
                         xhr1.setRequestHeader('Content-Type', 'application/json');
                         xhr1.send(sendJson);
+                        productValue = '';
+                        productSearchArray.length = 0;
+                        widthInput = 0;
+                        productId = 0;
+                        weight = 0;
+                        correctWeight = 0;
+                        addRecipeTable();
+                        containerWidth = document.getElementById("titleRecipeHeader").offsetWidth;
+                        addTableRecipeTHead();
+                        addTableRecipeTfoot();
+                        containerWeight = document.getElementById("weightRecipeHeader").offsetWidth;
+                        addWeightColumn();
+                        clickButtonOnInputField();
+                        clickWeightInput();
                     }
-                    productValue = '';
-                    productSearchArray.length = 0;
-                    widthInput = 0;
-                    productId = 0;
-                    weight = 0;
-                    correctWeight = 0;
-                    addRecipeTable();
-                    containerWidth = document.getElementById("titleRecipeHeader").offsetWidth;
-                    addTableRecipeTHead();
-                    addTableRecipeTfoot();
-                    containerWeight = document.getElementById("weightRecipeHeader").offsetWidth;
-                    addWeightColumn();
-                    clickButtonOnInputField();
-                    clickWeightInput();
                 }
             }
 

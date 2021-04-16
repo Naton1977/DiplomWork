@@ -259,7 +259,7 @@ header div:nth-of-type(3) {
     width: 70%;
     font-family: 'Dancing Script', cursive;
     font-weight: bold;
-    font-size: 100px;
+    font-size: 12vh;
 }
 
 #copy {
@@ -276,4 +276,99 @@ header div:nth-of-type(3) {
     height: 60px;
     text-align: center;
     font-size: 50px;
+}
+
+@media screen and (max-width: 900px) {
+    header {
+        justify-content: flex-end;
+    }
+
+    header img {
+        display: none;
+    }
+
+    header div:first-of-type {
+        text-align: center;
+        font-size: 200%;
+        width: 60%;
+    }
+
+    header div:nth-of-type(2) {
+        display: none;
+    }
+
+    header div:nth-of-type(3) p {
+        display: none;
+    }
+
+    header div:nth-of-type(3) a:first-of-type {
+        font-size: 150%;
+        margin-right: 15px;
+        width: 40%;
+    }
+
+    header div:nth-of-type(3) a:last-of-type {
+        display: none;
+    }
+
+    #item1 {
+        display: none;
+    }
+
+    #item3 {
+        display: none;
+    }
+
+    #item4 {
+        display: none;
+    }
+
+    #item5 {
+        display: none;
+    }
+
+    #item6 {
+        margin-top: 10px;
+        margin-left: 0;
+        margin-right: 0;
+        height: 100%;
+    }
+
+    #item6 img {
+        float: none;
+        margin-left: 5px;
+        width: 200%;
+    }
+
+    #item6 p {
+        display: none;
+    }
+
+    #item7 {
+        display: none;
+    }
+
+    #item8 {
+        display: none;
+    }
+
+    #item9 {
+        height: 10%;
+        width: 100%;
+        text-align: center;
+    }
+    #copy{
+        display: none;
+    }
+
+    #item9a {
+        font-size: 200%;
+        width: 100%;
+    }
+
+    #year {
+        font-size: 200%;
+        height: 100%;
+    }
+
 }

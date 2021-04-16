@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <c:url value="/resources/css/registerPageCSS.css" var="registerPageCSS"/>
+    <c:url value="/resources/css/registerPage.css" var="registerPageCSS"/>
     <link rel="stylesheet" href="${registerPageCSS}">
     <title>Title</title>
     <style>

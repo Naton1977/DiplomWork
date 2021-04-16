@@ -83,3 +83,20 @@ form{
     text-align: center;
     font-size: 50px;
 }
+@media screen and (max-width: 900px) {
+    header{
+        display: none;
+    }
+    #item1a{
+        display: none;
+    }
+    #footer{
+        display: none;
+    }
+    #yearFooter{
+        display: none;
+    }
+    #mainInput label{
+        font-size: 150%;
+    }
+}

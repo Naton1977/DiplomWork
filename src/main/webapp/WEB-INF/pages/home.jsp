@@ -106,7 +106,6 @@
         <div id="item9a">SLIM BODY</div>
         <div><i class="far fa-copyright" id="copy"></i></div>
     </div>
-
     <div id="year">2020</div>
 </div>
 </body>
