@@ -267,7 +267,6 @@ window.addEventListener('load', () => {
             icon(weather);
             description(weather);
             parameters(weather);
-            console.log(weather);
         }
     }
 
@@ -519,11 +518,13 @@ window.addEventListener('load', () => {
     }
 
 
-    setInterval(localTime, 1000);
-
     function myFunction() {
         setInterval(switchPictures, 3000);
     }
+
+
+    setInterval(localTime, 1000);
+
 
     myFunction();
     containerImage();

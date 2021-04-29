@@ -5,7 +5,15 @@ import org.decimal4j.util.DoubleRounder;
 import org.example.domain.dto.*;
 import org.example.domain.entity.*;
 import org.example.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +40,10 @@ public class ProductService {
         this.recipeRepository = recipeRepository;
         this.productRecipeRepository = productRecipeRepository;
     }
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     @Transactional
     public void changeProductData(String newProduct, String productParameter, UserDetails principal) throws SQLException {
@@ -116,10 +128,6 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    @Transactional
-    public void addNewUser(DiaryUser diaryUser) throws SQLException {
-        userRepository.save(diaryUser);
-    }
 
     @Transactional
     public Product addNewProduct(Product product) throws SQLException {
@@ -543,5 +551,20 @@ public class ProductService {
         return null;
     }
 
+    @Transactional
+    public void saveNewUser(UserDto userDto) {
+        String password = passwordEncoder.encode(userDto.getUserPassword());
+        DiaryUser diaryUser = new DiaryUser();
+        diaryUser.setUserLogin(userDto.getUserLogin());
+        diaryUser.setUserPassword(password);
+        diaryUser.setUserEmail(userDto.getUserEmail());
+        diaryUser.setRole("ROLE_USER");
+        userRepository.save(diaryUser);
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        User principal = new User(diaryUser.getUserLogin(), diaryUser.getUserPassword(), AuthorityUtils.createAuthorityList(diaryUser.getRole()));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getAuthorities());
+        securityContext.setAuthentication(authentication);
+    }
 
 }

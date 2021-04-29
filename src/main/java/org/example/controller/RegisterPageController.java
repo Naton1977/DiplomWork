@@ -27,8 +27,6 @@ public class RegisterPageController {
 
     private final ProductService productService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     public RegisterPageController(ProductService productService) {
         this.productService = productService;
@@ -53,18 +51,8 @@ public class RegisterPageController {
         if (bindingResult.hasErrors()) {
             return "registerPage";
         }
-        String password = passwordEncoder.encode(userDto.getUserPassword());
-        DiaryUser diaryUser = new DiaryUser();
-        diaryUser.setUserLogin(userDto.getUserLogin());
-        diaryUser.setUserPassword(password);
-        diaryUser.setUserEmail(userDto.getUserEmail());
-        diaryUser.setRole("ROLE_USER");
-        productService.addNewUser(diaryUser);
+        productService.saveNewUser(userDto);
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        User principal = new User(diaryUser.getUserLogin(), diaryUser.getUserPassword(), AuthorityUtils.createAuthorityList(diaryUser.getRole()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getAuthorities());
-        securityContext.setAuthentication(authentication);
         return "redirect:/diaryPage";
     }
 
